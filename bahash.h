@@ -31,75 +31,80 @@ dict *create_dict(int size) {
 }
 
 unsigned int hash(dict *htable, char *str) {
-    unsigned int hashval;
+    unsigned int hashval = 5381;
+    int c;
 
-    for (hashval=0; *str != '\0'; str++) 
-        hashval = *str + (hashval << 5) - hashval;
-   
+    while ((c = *str++)) {
+        hashval = ((hashval << 5) + hashval) + c;
+    }
+
     return hashval % htable->size;
 }
 
-char *reverse_array(dict *htable, char *str, char *result, long buff_size) {
-    char *word, *tmp;
-    if ((tmp = malloc(buff_size)) == NULL) return NULL;
+void array_to_string(char *str, char *array[], int size) {
+    int i=1;
 
-    word = strtok(str, ",");
-    strcpy(result, word);
+    str = strdup(array[0]);
 
-    while (word != NULL) {
-        word = strtok(NULL, ",");
-        if (word != NULL) {
-            strcpy(tmp, word);
-            strcat(tmp, ",");
-            strcat(tmp, result);
-            strcpy(result, tmp);
-        }
+    for (i=1; size>i; i++) {
+        strcat(str, ",");
+        strcat(str, array[i]);
     }
-    free(tmp);
-    return result;
+}
+
+void reverse_array_to_string(char *str, char *array[], int size) {
+    int i = size - 1;
+    str = strdup(array[i]);
+
+    for(i=1; i > -1; i--) {
+        strcat(str, ",");
+        strcat(str, array[i]);
+    }
 }
 
 list *lookup_string(dict *htable, char *str) {
     list *d_list;
-    char *words, *reverse;
     unsigned int hashval = hash(htable, str);
-    long buff_size = sizeof(char *) * strlen(str) + 2;
 
     for (d_list=htable->table[hashval]; d_list != NULL; d_list=d_list->next)
         if (strcmp(str, d_list->string) == 0)
             return d_list;
 
-    words = strdup(str);
-
-    if ((reverse = malloc(buff_size)) == NULL) return NULL;
-    reverse = reverse_array(htable, words, reverse, buff_size);
-    for (d_list=htable->table[hashval]; d_list != NULL; d_list=d_list->next)
-        if (strcmp(reverse, d_list->string) == 0) {
-            free(reverse);
-            free(words);
-            return d_list;
-        }
-    
-    free(reverse);
-    free(words);
     return NULL;
 }
 
-int add_string(dict *htable, char *str) {
+
+int add_string(dict *htable, char *array[], int size) {
     list *new_list;
     list *current_list;
-    unsigned int hashval = hash(htable, str);
+    char *str;
 
+    if ((str = malloc(sizeof(char) * 500)) == NULL) return 1;
     if ((new_list = malloc(sizeof(list))) == NULL) return 1;
 
+    //lookup
+    array_to_string(str, array, size);
     current_list = lookup_string(htable, str);
-    if (current_list != NULL) return 2;
+    if (current_list != NULL) {
+        free(str);
+        return 2;
+    }
+    
+    //reverse the lookup
+    reverse_array_to_string(str, array, size);
+    current_list = lookup_string(htable, str);
+    if (current_list != NULL) {
+        free(str);
+        return 2;
+    }
 
-    // not found, insert into list 
+    // not found, insert into list
+    unsigned int hashval = hash(htable, str);
     new_list->string = strdup(str);
     new_list->next = htable->table[hashval];
     htable->table[hashval] = new_list;
 
+    free(str);
     return 0;
 }
 
