@@ -5,9 +5,11 @@
 
 int main() {
     dict *table;
-    char *dog[] = {"dog", "stick", "ball"};
+    char *dog[] = {"dog", "stick", "ball", "cat", "mouse", "pickle", "carrot",
+                    "mongoose", "mongoose", "mango", "baconcat", "pigs",
+                    "kittens"};
 
-    table = perms(dog, 3);
+    table = perms(dog, 13);
     
     printf("Freeing table...\n");
     free_dict(table);
