@@ -5,9 +5,8 @@
 
 int main() {
     dict *table;
-    char *dog[] = {"dog", "dog", "ball"};
+    char *dog[] = {"dog", "stick", "ball"};
 
-    
     table = perms(dog, 3);
     
     printf("Freeing table...\n");
