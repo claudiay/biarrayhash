@@ -9,6 +9,7 @@ int main() {
                     "mongoose", "mongoose", "mango", "baconcat", "pigs",
                     "kittens"};
 
+    printf("Starting test...\n");
     table = perms(dog, 13);
     
     printf("Freeing table...\n");
