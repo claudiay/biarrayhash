@@ -32,7 +32,7 @@ unsigned long perm_size(int size) {
 
 dict *perms(char *array[], int size) {
     dict *table;
-    int size_of_table = 100;
+    int size_of_table = 12342;
     int i;
     unsigned long count=0;
     unsigned long size_perm = perm_size(size);
@@ -44,12 +44,12 @@ dict *perms(char *array[], int size) {
     while (count < size_perm) {
         for(i=0; i < size-1; i++) {
             swap(&array[i], &array[i+1]);
-            //add_string(table, array, size);
+            add_string(table, array, size);
             //show(array, size);
             count++;
         }
         swap(&array[0], &array[1]);
-        //add_string(table, array, size);
+        add_string(table, array, size);
         //show(array, size);
         count++;
     }

@@ -34,9 +34,8 @@ unsigned int hash(dict *htable, char *str) {
     unsigned int hashval = 5381;
     int c;
 
-    while ((c = *str++)) {
+    while ((c = *str++))
         hashval = ((hashval << 5) + hashval) + c;
-    }
 
     return hashval % htable->size;
 }
@@ -87,6 +86,7 @@ int add_string(dict *htable, char *array[], int size) {
     current_list = lookup_string(htable, str);
     if (current_list != NULL) {
         free(str);
+        free(new_list);
         return 2;
     }
     
@@ -95,6 +95,7 @@ int add_string(dict *htable, char *array[], int size) {
     current_list = lookup_string(htable, str);
     if (current_list != NULL) {
         free(str);
+        free(new_list);
         return 2;
     }
 
@@ -104,7 +105,6 @@ int add_string(dict *htable, char *array[], int size) {
     new_list->next = htable->table[hashval];
     htable->table[hashval] = new_list;
 
-    free(str);
     return 0;
 }
 

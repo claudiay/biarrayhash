@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "permutations.h"
 
-
 int main() {
     dict *table;
     char *dog[] = {"dog", "stick", "ball", "cat", "mouse", "pickle", "carrot",
@@ -10,7 +9,7 @@ int main() {
                     "kittens"};
 
     printf("Starting test...\n");
-    table = perms(dog, 13);
+    table = perms(dog, 10);
     
     printf("Freeing table...\n");
     free_dict(table);
