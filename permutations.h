@@ -19,23 +19,21 @@ void swap (char **x, char **y) {
 }
 
 unsigned long perm_size(int size) {
-    int permutations = 1;
+    unsigned long permutations = 1;
     int x;
 
     for (x=1; x <= size; x++)
         permutations = permutations * x;
 
-    printf("perm size: %d", permutations);
     return permutations;
 }
 
-
 dict *perms(char *array[], int size) {
     dict *table;
-    int size_of_table = 12342;
+    int size_of_table = 12354;
     int i;
     unsigned long count=0;
-    unsigned long size_perm = perm_size(size);
+    unsigned long size_perm = perm_size(size) / 2; //ignore reverse cases
     
     // Create hash table
     table = create_dict(size_of_table);
@@ -45,12 +43,10 @@ dict *perms(char *array[], int size) {
         for(i=0; i < size-1; i++) {
             swap(&array[i], &array[i+1]);
             add_string(table, array, size);
-            //show(array, size);
             count++;
         }
         swap(&array[0], &array[1]);
         add_string(table, array, size);
-        //show(array, size);
         count++;
     }
      

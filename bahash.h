@@ -40,26 +40,6 @@ unsigned int hash(dict *htable, char *str) {
     return hashval % htable->size;
 }
 
-void array_to_string(char *str, char *array[], int size) {
-    int i=1;
-
-    str = strdup(array[0]);
-
-    for (i=1; size>i; i++) {
-        strcat(str, ",");
-        strcat(str, array[i]);
-    }
-}
-
-void reverse_array_to_string(char *str, char *array[], int size) {
-    int i = size - 1;
-    str = strdup(array[i]);
-
-    for(i=1; i > -1; i--) {
-        strcat(str, ",");
-        strcat(str, array[i]);
-    }
-}
 
 list *lookup_string(dict *htable, char *str) {
     list *d_list;
@@ -74,15 +54,25 @@ list *lookup_string(dict *htable, char *str) {
 
 
 int add_string(dict *htable, char *array[], int size) {
-    list *new_list;
     list *current_list;
-    char *str;
+    int i=1;
 
-    if ((str = malloc(sizeof(char) * 500)) == NULL) return 1;
-    if ((new_list = malloc(sizeof(list))) == NULL) return 1;
+    // malloc space for str and list
+    char *str = (char*) malloc(sizeof(char) * 300);
+    if (str == NULL) return 1;
+    list *new_list = malloc(sizeof(list));
+    if (new_list == NULL) return 1;
 
+    
+    // change array into string 
+    str = strdup(array[0]);
+
+    for (i=1; size>i; i++) {
+        strcat(str, ",");
+        strcat(str, array[i]);
+    }
+    
     //lookup
-    array_to_string(str, array, size);
     current_list = lookup_string(htable, str);
     if (current_list != NULL) {
         free(str);
@@ -90,15 +80,6 @@ int add_string(dict *htable, char *array[], int size) {
         return 2;
     }
     
-    //reverse the lookup
-    reverse_array_to_string(str, array, size);
-    current_list = lookup_string(htable, str);
-    if (current_list != NULL) {
-        free(str);
-        free(new_list);
-        return 2;
-    }
-
     // not found, insert into list
     unsigned int hashval = hash(htable, str);
     new_list->string = strdup(str);
